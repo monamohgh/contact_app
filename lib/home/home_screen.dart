@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:contact_assignment/home/widgets/add_contact_bottom_sheet.dart';
+import 'package:contact_assignment/home/widgets/contact_widget.dart';
 import 'package:contact_assignment/home/widgets/elavated_button_widget.dart';
 import 'package:contact_assignment/home/widgets/text_field_widget.dart';
 import 'package:contact_assignment/utils/app_assets.dart';
@@ -5,10 +8,29 @@ import 'package:contact_assignment/utils/app_colors.dart';
 import 'package:contact_assignment/utils/app_styles.dart';
 import 'package:contact_assignment/utils/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
+import 'models/contact _model.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  File? selectedImage;
+  List<ContactModel> myContactsList = [];
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +53,13 @@ class HomeScreen extends StatelessWidget {
           spacing: SizeConfig.getHeight(context) * 0.02,
           children: [
             ColorFiltered(
-              colorFilter: ColorFilter.mode(AppColors.gold, BlendMode.srcATop),
+              colorFilter: ColorFilter.mode(
+                AppColors.gold,
+                BlendMode.srcATop,
+              ),
               child: Lottie.asset(
                 'assets/json/new_list_purple.json',
-                reverse: false,
-                repeat: false,
+                animate: false,
               ),
             ),
             Text(
@@ -52,80 +76,49 @@ class HomeScreen extends StatelessWidget {
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
             builder: (context) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
-                ),
-                child: Container(
-                  height:
-                  SizeConfig.getHeight(context)*.53,
-                  decoration: BoxDecoration(
-                    color: AppColors.darkBlue,
-                    borderRadius:  BorderRadius.circular(40),
-                  ),
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: SizeConfig.getWidth(context)*.04,vertical: SizeConfig.getHeight(context)*.02),
-                      child: Column(
-                        spacing: SizeConfig.getHeight(context)*.01,
-                        children: [
-                          Row(
-                            spacing: SizeConfig.getWidth(context)*.05,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: AppColors.gold),
-                                    borderRadius: BorderRadius.circular(28)
-                                ),
-                                height: SizeConfig.getHeight(context)*.16,
-                                child: Lottie.asset(
-                                  'assets/json/image_picker.json',
-                                  delegates: LottieDelegates(
-                                    values: [
-                                      ValueDelegate.colorFilter(
-                                        ['Layer 7', 'Group 1', 'Fill 1'],
-                                        value: ColorFilter.mode(
-                                          AppColors.darkBlue,
-                                          BlendMode.srcIn,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-
-                              Expanded(
-                                child: Column(
-                                  spacing: SizeConfig.getHeight(context)*.02,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('User Name',style: AppStyles.medium16Gold,),
-                                    Divider(color: AppColors.gold,height: 5,),
-                                    Text('example@email.com',style: AppStyles.medium16Gold),
-                                    Divider(color: AppColors.gold,height: 5,),
-                                    Text('+200000000000',style: AppStyles.medium16Gold),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                          TextFieldWidget(hitText: 'Enter User Name',type: TextInputType.name,),
-                          TextFieldWidget(hitText: 'Enter User Email',type: TextInputType.emailAddress,),
-                          TextFieldWidget(hitText: 'Enter User Phone',type: TextInputType.number),
-                          ElevatedButtonWidget(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
+              return const AddContactBottomSheet();
             },
           );
         },
         backgroundColor: AppColors.gold,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
-
     );
+  }
+
+  Widget saveUserButton() {
+    return SizedBox(
+      height: SizeConfig.getHeight(context) * 0.06,
+      width: SizeConfig.getWidth(context) * 0.9,
+      child: ElevatedButton(
+        onPressed: () {
+          ListView.builder(
+            itemBuilder: (context, index) {
+              return ContactWidget(contact: myContactsList[index]);
+            },
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(16),
+          backgroundColor: AppColors.gold,
+          foregroundColor: AppColors.darkBlue,
+          textStyle: AppStyles.regular20darkBlue,
+          overlayColor: AppColors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        child: const Text('Enter User'),
+      ),
+    );
+  }
+
+  Future pickImageFromGallery() async {
+    final returnedImage = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+    setState(() {
+      selectedImage = File(returnedImage!.path);
+    });
   }
 }
