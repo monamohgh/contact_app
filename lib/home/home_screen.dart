@@ -1,8 +1,5 @@
 import 'dart:io';
 import 'package:contact_assignment/home/widgets/add_contact_bottom_sheet.dart';
-import 'package:contact_assignment/home/widgets/contact_widget.dart';
-import 'package:contact_assignment/home/widgets/elavated_button_widget.dart';
-import 'package:contact_assignment/home/widgets/text_field_widget.dart';
 import 'package:contact_assignment/utils/app_assets.dart';
 import 'package:contact_assignment/utils/app_colors.dart';
 import 'package:contact_assignment/utils/app_styles.dart';
@@ -10,8 +7,6 @@ import 'package:contact_assignment/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
-import 'models/contact _model.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -24,7 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   File? selectedImage;
-  List<ContactModel> myContactsList = [];
 
   @override
   void dispose() {
@@ -92,11 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
       width: SizeConfig.getWidth(context) * 0.9,
       child: ElevatedButton(
         onPressed: () {
-          ListView.builder(
-            itemBuilder: (context, index) {
-              return ContactWidget(contact: myContactsList[index]);
-            },
-          );
         },
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(16),
@@ -112,7 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
   Future pickImageFromGallery() async {
     final returnedImage = await ImagePicker().pickImage(
       source: ImageSource.gallery,

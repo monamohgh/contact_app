@@ -161,8 +161,6 @@ class _AddContactBottomSheetState extends State<AddContactBottomSheet> {
                     });
                   },
                 ),
-
-                const SizedBox(height: 10),
                 saveUserButton(),
               ],
             ),
@@ -178,14 +176,6 @@ class _AddContactBottomSheetState extends State<AddContactBottomSheet> {
       width: SizeConfig.getWidth(context) * 0.9,
       child: ElevatedButton(
         onPressed: () {
-          // التعديل البسيط الوحيد هنا هو وضع ?.path لحل مشكلة الـ String في الموديل
-          final newContact = ContactModel(
-            name: nameController.text,
-            email: emailController.text,
-            phone: phoneController.text,
-            imagePath: selectedImage?.path,
-          );
-          Navigator.pop(context, newContact);
         },
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(16),

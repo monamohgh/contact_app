@@ -3,7 +3,7 @@ import 'package:contact_assignment/utils/app_colors.dart';
 import 'package:contact_assignment/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 
-class TextFieldWidget extends StatefulWidget {
+class TextFieldWidget extends StatelessWidget {
   final String hitText;
   final TextInputType type;
    final TextEditingController controller;
@@ -16,21 +16,15 @@ class TextFieldWidget extends StatefulWidget {
     required this .controller,
     required this.onChanged,
   });
-
-  @override
-  State<TextFieldWidget> createState() => _TextFieldWidgetState();
-}
-
-class _TextFieldWidgetState extends State<TextFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      onChanged:widget.onChanged,
-      controller: widget.controller,
+      onChanged:onChanged,
+      controller: controller,
       style: AppStyles.regular16lightBlue,
-      keyboardType: widget.type,
+      keyboardType: type,
       decoration: InputDecoration(
-        hintText: widget.hitText,
+        hintText: hitText,
         hintStyle: TextStyle(color: AppColors.gold.withOpacity(0.5)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
